@@ -1,10 +1,12 @@
+const DATABASE_URL = "mongodb+srv://cluster0.a2pgynk.mongodb.net/HackFest23"
 const express = require("express");
 const cors = require("cors");
+const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+dotenv.config();
 const app = express();
 app.use(express.json());
-app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 //database
 mongoose
