@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 //database
 mongoose
-  .connect(process.env.DATABASE_URL, {
+  .connect(DATABASE_URL, {
     useNewUrlParser: true,
   })
   .then(() => console.log("database connected successfully"))
