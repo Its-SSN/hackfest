@@ -1,4 +1,4 @@
-const DATABASE_URL = "mongodb+srv://cluster0.a2pgynk.mongodb.net/HackFest23"
+const DATABASE_URL = "mongodb+srv://shreyanshandilya:NcjtCDV5by816iMH@cluster0.a2pgynk.mongodb.net/HackFest23"
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 //database
 mongoose
-  .connect(process.env.DATABASE_URL, {
+  .connect(DATABASE_URL, {
     useNewUrlParser: true,
   })
   .then(() => console.log("database connected successfully"))
