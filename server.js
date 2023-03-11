@@ -9,7 +9,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //database
 mongoose
   .connect(DATABASE_URL, {
-  .connect(DATABASE_URL, {
+  
     useNewUrlParser: true,
   })
   .then(() => console.log("database connected successfully"))
