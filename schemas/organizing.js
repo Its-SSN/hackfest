@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const organizingSchema = mongoose.Schema({
+  serial_number:Number,
   name: {
     type: String,
     required: [true, "name is required"]

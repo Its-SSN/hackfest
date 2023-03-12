@@ -5,7 +5,8 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 // const User = require('./schemas/teams');
-const User = require('./schemas/testteam')
+const User = require('./schemas/testteam');
+const Organizers = require('./schemas/organizing')
 const app = express();
 app.use(express.json());
 app.set('view engine', 'ejs');
@@ -57,6 +58,12 @@ app.post("/login", function(req, res) {
   })
 
 });
+
+
+app.get('/organizing', async(req,res)=>{
+  const organizing_members = await Organizers.find({});
+  res.send(organizing_members);
+})
 
 app.listen(PORT, () => {
   console.log(`server is listening on port ${PORT}...`);
