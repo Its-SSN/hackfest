@@ -9,6 +9,7 @@ const User = require('./schemas/testteam');
 const Organizers = require('./schemas/organizing')
 const app = express();
 app.use(express.json());
+app.use(cors());
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 //database
@@ -44,7 +45,7 @@ app.post("/login", function(req, res) {
           
           console.log("User " + username + " has been successfully logged in");
           res.status(200).json({
-            message:"Successful"
+            message:"Successfully logged in"
           })
       }
       else {
