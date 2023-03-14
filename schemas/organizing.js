@@ -1,19 +1,23 @@
 const mongoose = require("mongoose");
 const organizingSchema = mongoose.Schema({
-  serial_number: Number,
+  id: Number,
   name: {
     type: String,
     required: [true, "name is required"],
   },
-  role: {
+  position: {
     type: String,
     required: true,
   },
-  urls: {
-    type: Array,
-    default: [],
+  insta_url: {
+    type: String,
+    default: "",
   },
-  photo: {
+  linkedin_url: {
+    type: String,
+    default: "",
+  },
+  image: {
     type: String, //drive link
     required: true,
   },
