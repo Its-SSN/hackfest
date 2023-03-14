@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const organizingSchema = mongoose.Schema({
-  id: Number,
+  id: {
+    type: String,
+  },
   name: {
     type: String,
     required: [true, "name is required"],
@@ -22,4 +24,4 @@ const organizingSchema = mongoose.Schema({
     required: true,
   },
 });
-module.exports = mongoose.model("Ogranizing", organizingSchema);
+module.exports = mongoose.model("Organizing", organizingSchema);

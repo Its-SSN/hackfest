@@ -75,7 +75,8 @@ app.post("/login", function (req, res) {
 });
 
 app.get("/organizing", async (req, res) => {
-  const organizing_members = await Organizers.find({});
+  const organizing_members = await Organizers.find();
+  // console.log(organizing_members);
   res.send(organizing_members);
 });
 
