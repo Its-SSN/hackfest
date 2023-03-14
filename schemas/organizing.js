@@ -1,21 +1,21 @@
 const mongoose = require("mongoose");
 const organizingSchema = mongoose.Schema({
-  serial_number:Number,
+  serial_number: Number,
   name: {
     type: String,
-    required: [true, "name is required"]
+    required: [true, "name is required"],
   },
   role: {
     type: String,
-    required: true
+    required: true,
   },
   urls: {
     type: Array,
-    default: []
+    default: [],
   },
   photo: {
-    type: String,//drive link
-    required: true
+    type: String, //drive link
+    required: true,
   },
 });
 module.exports = mongoose.model("Ogranizing", organizingSchema);

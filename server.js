@@ -1,5 +1,6 @@
-// const DATABASE_URL = "mongodb+srv://shreyanshandilya:NcjtCDV5by816iMH@cluster0.a2pgynk.mongodb.net/HackFest23"
-const DATABASE_URL = "mongodb://localhost:27017/hackfest23";
+const DATABASE_URL =
+  "mongodb+srv://shreyanshandilya:NcjtCDV5by816iMH@cluster0.a2pgynk.mongodb.net/HackFest23";
+// const DATABASE_URL = "mongodb://localhost:27017/hackfest23";
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
@@ -20,7 +21,6 @@ mongoose
   .then(() => console.log("database connected successfully"))
   .catch((err) => console.log("error connecting to mongodb" + err));
 const PORT = 8000;
-
 app.post("/register", function (req, res) {
   const {
     college,
