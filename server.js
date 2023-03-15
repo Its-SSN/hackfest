@@ -8,6 +8,7 @@ const bodyParser = require("body-parser");
 // const User = require('./schemas/teams');
 const User = require("./schemas/testteam");
 const Organizers = require("./schemas/organizing");
+const Announcements = require("./schemas/announcement");
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -79,7 +80,10 @@ app.get("/organizing", async (req, res) => {
   // console.log(organizing_members);
   res.send(organizing_members);
 });
-
+app.get("/announcement", async (req, res) => {
+  const announcement = await Announcements.find();
+  res.send(announcement);
+});
 app.listen(PORT, () => {
   console.log(`server is listening on port ${PORT}...`);
 });
