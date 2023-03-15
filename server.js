@@ -20,7 +20,7 @@ mongoose
   })
   .then(() => console.log("database connected successfully"))
   .catch((err) => console.log("error connecting to mongodb" + err));
-const PORT = 8000;
+const PORT = process.env.PORT || 8000;
 app.post("/register", function (req, res) {
   const {
     college,
