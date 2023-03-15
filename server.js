@@ -52,7 +52,7 @@ app.post("/register", function (req, res) {
     });
 });
 
-app.post("/login", function (req, res) {
+app.post("/login", (req, res) => {
   const { team_name, password } = req.body;
 
   User.findOne({ team_name: team_name })
