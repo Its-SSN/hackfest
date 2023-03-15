@@ -5,6 +5,7 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+const PORT = process.env.PORT ||8000;
 // const User = require('./schemas/teams');
 const User = require("./schemas/testteam");
 const Organizers = require("./schemas/organizing");
@@ -20,7 +21,7 @@ mongoose
   })
   .then(() => console.log("database connected successfully"))
   .catch((err) => console.log("error connecting to mongodb" + err));
-const PORT = 8000;
+
 app.post("/register", function (req, res) {
   const {
     college,
