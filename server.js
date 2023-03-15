@@ -85,5 +85,5 @@ app.get("/announcement", async (req, res) => {
   res.send(announcement);
 });
 app.listen(PORT, () => {
-  console.log(server is listening on port ${PORT}...);
+  console.log(`server is listening on port ${PORT}...`);
 });
