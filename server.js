@@ -45,8 +45,12 @@ app.post('/register', function (req, res) {
   newUser
     .save()
     .then(() => {
-      res.status(200).json({ ...newUser, message: 'Successfully Registered!' })
+      res.status(200).json({
+        message: 'Successfully registered',
+        // data: newUser,
+      })
       console.log('New user ' + team_name + ' account has been registered')
+      console.log(newUser)
     })
     .catch((err) => {
       console.log(err)
