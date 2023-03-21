@@ -12,7 +12,11 @@ const testSchema = mongoose.Schema({
         default: [],
       },
     team_name:String,
-    password:String
+    password:String,
+    hours:Number,
+    attendance_counter:Number,
+    in_counter:Number,
+    out_counter:Number
 });
 
 module.exports = mongoose.model('Test',testSchema)
