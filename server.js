@@ -1,6 +1,5 @@
 const DATABASE_URL =
-  'mongodb+srv://shreyanshandilya:NcjtCDV5by816iMH@cluster0.a2pgynk.mongodb.net/HackFest23'
-// const DATABASE_URL = "mongodb://localhost:27017/hackfest23";
+  'mongodb+srv://shreyanshandilya:hackfest@cluster0.a2pgynk.mongodb.net/HackFest23'
 const express = require('express')
 const cors = require('cors')
 const mongoose = require('mongoose')
