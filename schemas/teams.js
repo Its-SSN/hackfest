@@ -1,31 +1,30 @@
 const mongoose = require("mongoose");
 const teamSchema = mongoose.Schema({
-  team_name: {
-    type: String,
-    required: [true, "team name is required"],
-    trim: true,
-    text: true,
+  Team_Id:String,
+  Team_Name:String,
+  Player_Type:String,
+  Player_Name:String,
+  Player_Email:String,
+  Player_Mobile:String,
+  Player_Gender:String,
+  Country:String,
+  Domain:String,
+  Course_Pursuing:String,
+  Course_Stream:String,
+  Specialization:String,
+  Course_Programme:String,
+  Year_of_Study:String,
+  Passing_Out_Year:Number,
+  Player_Organisation:String,
+  Work_Experience:String,
+  Reg:{
+    Status:String,
   },
-  team_members: {
-    type: Array,
-    default: [],
-  },
-  team_leader: {
-    name: String,
-    email: String,
-    phone_number: String,
-  },
-  QRCode: {
-    type: String,
-    required: true,
-  },
-  penalty: {
-    type: Number,
-    default: 0,
-  },
-  college: {
-    type: String,
-    required: true,
-  },
+  problem_statement_and_solution:String,
+  password:{
+    type:String,
+    default:"hackfest",
+    required:true,
+  }
 });
 module.exports = mongoose.model("Team", teamSchema);
