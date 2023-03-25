@@ -25,6 +25,27 @@ const teamSchema = mongoose.Schema({
     type:String,
     default:"hackfest",
     required:true,
+  },
+  attendance_counter:{
+    type: Number,
+    default:0,
+  },
+  current_absent:{
+    type:[Number],
+    default:[0],
+    required:true,
+  },
+  timesarray:{
+    type:[Date],
+    default:[],
+    required:true,
   }
+
+
+
+
+
+
+
 });
 module.exports = mongoose.model("Team", teamSchema);

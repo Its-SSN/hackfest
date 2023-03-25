@@ -90,6 +90,31 @@ app.post('/login', (req, res) => {
     })
 });
 
+app.get('/attendance/:teamid', async(req,res)=>{
+  try{
+    // console.log(req.params);
+  const id = req.params.teamid;
+  // console.log(id);
+  // res.send("hello");
+  const foundUser = await User.findOne({Team_Id:id})
+  let counter = foundUser.attendance_counter;
+  counter=counter+1;
+  const teams = await User.find({Team_Id:id})
+  const teamsize = teams.length;
+  // console.log(teamsize);
+    if(teamsize<counter)
+    {
+      return res.status(400).json({message:"Too many team members"});
+    }
+  await User.updateMany({Team_Id:id},{attendance_counter:counter});
+  // await User.updateMany({Team_Id:id},{timesarray:[],current_absent:[0]});
+  return res.status(200).json({message:id});
+}catch(error){
+  return res.status(500).json({message:error.mesaage});
+}
+  
+})
+
 app.get('/organizing', async (req, res) => {
   const organizing_members = await Organizers.find()
   // console.log(organizing_members);
@@ -102,3 +127,29 @@ app.get('/announcement', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`server is listening on port ${PORT}...`)
 })
+app.get('/out/:teamid',async(req,res)=>{
+  try{const teamid = req.params.teamid;
+    let {timesarray,current_absent} = await User.findOne({Team_Id:teamid});
+    
+  await User.updateMany({Team_Id:teamid},{timesarray:[...timesarray,new Date()],current_absent:[...current_absent,current_absent[current_absent.length-1]+1]});
+  res.send("ok");
+  }catch(err){
+    console.log(err);
+  }
+  // const teams = await User.find({Team_id:teamid});
+  // const d = new Date();
+  // res.send({date:d});
+});
+app.get('/in/:teamid',async(req,res)=>{
+  try{const teamid = req.params.teamid;
+    let {timesarray,current_absent} = await User.findOne({Team_Id:teamid});
+    
+  await User.updateMany({Team_Id:teamid},{timesarray:[...timesarray,new Date()],current_absent:[...current_absent,current_absent[current_absent.length-1]-1]});
+  res.send("ok");
+  }catch(err){
+    console.log(err);
+  }
+  // const teams = await User.find({Team_id:teamid});
+  // const d = new Date();
+  // res.send({date:d});
+});
