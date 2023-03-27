@@ -72,17 +72,23 @@ app.post('/login', (req, res) => {
 
   User.findOne({ Player_Email })
     .then((foundUser) => {
-      if (foundUser.password === password) {
-        console.log('User ' + foundUser.Team_Name + ' has been successfully logged in')
-        res.status(200).json({
-          message: 'Successfully logged in',
-          data: foundUser,
-        })
-      } else {
+      if(foundUser.Player_Type=='team leader'){
+        if (foundUser.password === password) {
+          console.log('User ' + foundUser.Team_Name + ' has been successfully logged in')
+          res.status(200).json({
+            message: 'Successfully logged in',
+            data: foundUser,
+          })
+        } else {
+          res.status(404).json({
+            message: 'Incorrect password or username',
+          })
+          console.log('Incorrect password or username')
+        }
+      }else{
         res.status(404).json({
-          message: 'Incorrect password or username',
+          message:"Please login from Team leader's email address"
         })
-        console.log('Incorrect password or username')
       }
     })
     .catch((err) => {
