@@ -8,6 +8,7 @@ const User = require('./schemas/teams');
 // const User = require('./schemas/testteam')
 const Organizers = require('./schemas/organizing')
 const Announcements = require('./schemas/announcement')
+const Problems = require('./schemas/problemStatements')
 const app = express()
 app.use(express.json())
 app.use(cors())
@@ -129,6 +130,10 @@ app.get('/organizing', async (req, res) => {
 app.get('/announcement', async (req, res) => {
   const announcement = await Announcements.find()
   res.send(announcement)
+})
+app.get('/problem', async (req, res) => {
+  const problem = await Problems.find()
+  res.send(problem)
 })
 app.listen(PORT, () => {
   console.log(`server is listening on port ${PORT}...`)
