@@ -136,20 +136,28 @@ app.listen(PORT, () => {
 app.get('/out/:teamid',async(req,res)=>{
   try{const teamid = req.params.teamid;
     let {timesarray,current_absent} = await User.findOne({Team_Id:teamid});
-    
+    let team = await User.find({Team_Id:teamid});
+    let teamSize = team.length-1;
+    console.log(teamSize)
+    if(current_absent[current_absent.length-1]>teamSize){
+      return res.status(404).json({
+        message:"Too few members to get out"
+      })
+    }
   await User.updateMany({Team_Id:teamid},{timesarray:[...timesarray,new Date()],current_absent:[...current_absent,current_absent[current_absent.length-1]+1]});
   res.send("ok");
   }catch(err){
     console.log(err);
   }
-  // const teams = await User.find({Team_id:teamid});
-  // const d = new Date();
-  // res.send({date:d});
 });
 app.get('/in/:teamid',async(req,res)=>{
   try{const teamid = req.params.teamid;
     let {timesarray,current_absent} = await User.findOne({Team_Id:teamid});
-    
+    if(current_absent[current_absent.length-1]<=0){
+      return res.status(404).json({
+        message:"Too many members to get in"
+      })
+    }
   await User.updateMany({Team_Id:teamid},{timesarray:[...timesarray,new Date()],current_absent:[...current_absent,current_absent[current_absent.length-1]-1]});
   res.send("ok");
   }catch(err){
