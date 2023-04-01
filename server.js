@@ -22,40 +22,7 @@ mongoose
   .then(() => console.log('database connected successfully'))
   .catch((err) => console.log('error connecting to mongodb' + err))
 const PORT = process.env.PORT || 8000
-// app.post('/register', function (req, res) {
-//   const {
-//     college,
-//     team_captain,
-//     team_captain_email,
-//     team_captain_phone,
-//     team_members,
-//     password,
-//     team_name,
-//   } = req.body
-//   const newUser = new User({
-//     college,
-//     team_captain,
-//     team_captain_email,
-//     team_captain_phone,
-//     team_members,
-//     team_name,
-//     password,
-//   })
 
-//   newUser
-//     .save()
-//     .then(() => {
-//       res.status(200).json({
-//         message: 'Successfully registered',
-//         // data: newUser,
-//       })
-//       console.log('New user ' + team_name + ' account has been registered')
-//       console.log(newUser)
-//     })
-//     .catch((err) => {
-//       console.log(err)
-//     })
-// })
 app.post("/change_password",async (req,res)=>{
   const { Player_Email, old_password , new_password} = req.body;
   const foundUser = await User.findOne({Player_Email});
@@ -172,3 +139,19 @@ app.get('/in/:teamid',async(req,res)=>{
   // const d = new Date();
   // res.send({date:d});
 });
+
+app.get('/teams', async(req,res)=>{
+  const teams = (await User.find()).filter((item,i)=>{return (item.Player_Type === "team leader")});
+  const teamNames = teams.map(({Team_Name},i)=>(
+    Team_Name
+  ))
+  console.log(teamNames);
+  res.json(teamNames);
+})
+app.get("/:teamid",async (req,res)=>{
+  const id = req.params.teamid;
+  const resp =((await User.find({Team_Id:id})).filter((item,i)=>{return (item.Player_Type==="team leader")}))[0];
+  console.log(resp);
+  res.json(resp);
+});
+// app.post('/splannouncements')
