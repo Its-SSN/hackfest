@@ -1,158 +1,180 @@
 const DATABASE_URL =
-  'mongodb+srv://shreyanshandilya:hackfest@cluster0.a2pgynk.mongodb.net/HackFest23'
-const express = require('express')
-const cors = require('cors')
-const mongoose = require('mongoose')
-const bodyParser = require('body-parser')
-const User = require('./schemas/teams');
+  "mongodb+srv://shreyanshandilya:hackfest@cluster0.a2pgynk.mongodb.net/HackFest23";
+const express = require("express");
+const cors = require("cors");
+const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
+const User = require("./schemas/teams");
 // const User = require('./schemas/testteam')
-const Organizers = require('./schemas/organizing')
-const Announcements = require('./schemas/announcement')
-const Problems = require('./schemas/problemStatements')
-const app = express()
-app.use(express.json())
-app.use(cors())
-app.set('view engine', 'ejs')
-app.use(bodyParser.urlencoded({ extended: true }))
+const Organizers = require("./schemas/organizing");
+const Announcements = require("./schemas/announcement");
+const Problems = require("./schemas/problemStatements");
+const { clearCache } = require("ejs");
+const app = express();
+app.use(express.json());
+app.use(cors());
+app.set("view engine", "ejs");
+app.use(bodyParser.urlencoded({ extended: true }));
 //database
 mongoose
   .connect(DATABASE_URL, {
     useNewUrlParser: true,
   })
-  .then(() => console.log('database connected successfully'))
-  .catch((err) => console.log('error connecting to mongodb' + err))
-const PORT = process.env.PORT || 8000
+  .then(() => console.log("database connected successfully"))
+  .catch((err) => console.log("error connecting to mongodb" + err));
+const PORT = process.env.PORT || 8000;
 
-app.post("/change_password",async (req,res)=>{
-  const { Player_Email, old_password , new_password} = req.body;
-  const foundUser = await User.findOne({Player_Email});
-  if(foundUser.password === old_password){
-  await User.findOneAndUpdate({Player_Email},{password:new_password});
-  return res.status(200).json({message:"OK"});
+app.post("/change_password", async (req, res) => {
+  const { Player_Email, old_password, new_password } = req.body;
+  const foundUser = await User.findOne({ Player_Email });
+  if (foundUser.password === old_password) {
+    await User.findOneAndUpdate({ Player_Email }, { password: new_password });
+    return res.status(200).json({ message: "OK" });
+  } else {
+    return res.status(400).json({ message: "Incorrect password" });
   }
-  else
-  {
-    return res.status(400).json({message:"Incorrect password"});
-  }
-})
-app.post('/login', (req, res) => {
-  const { Player_Email, password} = req.body
+});
+app.post("/login", (req, res) => {
+  const { Player_Email, password } = req.body;
 
   User.findOne({ Player_Email })
     .then((foundUser) => {
-      if(foundUser.Player_Type=='team leader'){
+      if (foundUser.Player_Type == "team leader") {
         if (foundUser.password === password) {
-          console.log('User ' + foundUser.Team_Name + ' has been successfully logged in')
+          console.log(
+            "User " + foundUser.Team_Name + " has been successfully logged in"
+          );
           res.status(200).json({
-            message: 'Successfully logged in',
+            message: "Successfully logged in",
             data: foundUser,
-          })
+          });
         } else {
           res.status(404).json({
-            message: 'Incorrect password or username',
-          })
-          console.log('Incorrect password or username')
+            message: "Incorrect password or username",
+          });
+          console.log("Incorrect password or username");
         }
-      }else{
+      } else {
         res.status(404).json({
-          message:"Please login from Team leader's email address"
-        })
+          message: "Please login from Team leader's email address",
+        });
       }
     })
     .catch((err) => {
-      console.log(err)
-    })
+      console.log(err);
+    });
 });
 
-app.get('/attendance/:teamid', async(req,res)=>{
-  try{
+app.get("/attendance/:teamid", async (req, res) => {
+  try {
     // console.log(req.params);
-  const id = req.params.teamid;
-  // console.log(id);
-  // res.send("hello");
-  const foundUser = await User.findOne({Team_Id:id})
-  let counter = foundUser.attendance_counter;
-  counter=counter+1;
-  const teams = await User.find({Team_Id:id})
-  const teamsize = teams.length;
-  // console.log(teamsize);
-    if(teamsize<counter)
-    {
-      return res.status(400).json({message:"Too many team members"});
+    const id = req.params.teamid;
+    // console.log(id);
+    // res.send("hello");
+    const foundUser = await User.findOne({ Team_Id: id });
+    let counter = foundUser.attendance_counter;
+    counter = counter + 1;
+    const teams = await User.find({ Team_Id: id });
+    const teamsize = teams.length;
+    // console.log(teamsize);
+    if (teamsize < counter) {
+      return res.status(400).json({ message: "Too many team members" });
     }
-  await User.updateMany({Team_Id:id},{attendance_counter:counter});
-  // await User.updateMany({Team_Id:id},{timesarray:[],current_absent:[0]});
-  return res.status(200).json({message:id});
-}catch(error){
-  return res.status(500).json({message:error.mesaage});
-}
-  
-})
+    await User.updateMany({ Team_Id: id }, { attendance_counter: counter });
+    // await User.updateMany({Team_Id:id},{timesarray:[],current_absent:[0]});
+    return res.status(200).json({ message: id });
+  } catch (error) {
+    return res.status(500).json({ message: error.mesaage });
+  }
+});
 
-app.get('/refreshment_counter/:teamid', async(req,res)=>{
-  try{
-  const id = req.params.teamid;
-  const foundUser = await User.findOne({Team_Id:id})
-  let counter = foundUser.refreshment_counter;
-  counter=counter+1;
-  const teams = await User.find({Team_Id:id})
-  const teamsize = teams.length;
-  // console.log(teamsize);
-    if(teamsize<counter)
-    {
-      return res.status(400).json({message:"Too many team members"});
+app.get("/refreshment_counter/:teamid", async (req, res) => {
+  try {
+    const id = req.params.teamid;
+    const foundUser = await User.findOne({ Team_Id: id });
+    let counter = foundUser.refreshment_counter;
+    counter = counter + 1;
+    const teams = await User.find({ Team_Id: id });
+    const teamsize = teams.length;
+    // console.log(teamsize);
+    if (teamsize < counter) {
+      return res.status(400).json({ message: "Too many team members" });
     }
-  await User.updateMany({Team_Id:id},{refreshment_counter:counter});
-  return res.status(200).json({message:id});
-}catch(error){
-  return res.status(500).json({message:error.mesaage});
-}
-})
+    await User.updateMany({ Team_Id: id }, { refreshment_counter: counter });
+    return res.status(200).json({ message: id });
+  } catch (error) {
+    return res.status(500).json({ message: error.mesaage });
+  }
+});
 
-app.get('/organizing', async (req, res) => {
-  const organizing_members = await Organizers.find()
+app.get("/organizing", async (req, res) => {
+  const organizing_members = await Organizers.find();
   // console.log(organizing_members);
-  res.send(organizing_members)
-})
-app.get('/announcement', async (req, res) => {
-  const announcement = await Announcements.find()
-  res.send(announcement)
-})
-app.get('/problem', async (req, res) => {
-  const problem = await Problems.find()
-  res.send(problem)
-})
+  res.send(organizing_members);
+});
+app.get("/announcement", async (req, res) => {
+  const announcement = await Announcements.find();
+  res.send(announcement);
+});
+app.get("/problem", async (req, res) => {
+  const problem = await Problems.find();
+  res.send(problem);
+});
 app.listen(PORT, () => {
-  console.log(`server is listening on port ${PORT}...`)
-})
-app.get('/out/:teamid',async(req,res)=>{
-  try{const teamid = req.params.teamid;
-    let {timesarray,current_absent} = await User.findOne({Team_Id:teamid});
-    let team = await User.find({Team_Id:teamid});
-    let teamSize = team.length-1;
-    console.log(teamSize)
-    if(current_absent[current_absent.length-1]>teamSize){
+  console.log(`server is listening on port ${PORT}...`);
+});
+app.get("/out/:teamid", async (req, res) => {
+  try {
+    const teamid = req.params.teamid;
+    let { timesarray, current_absent } = await User.findOne({
+      Team_Id: teamid,
+    });
+    let team = await User.find({ Team_Id: teamid });
+    let teamSize = team.length - 1;
+    console.log(teamSize);
+    if (current_absent[current_absent.length - 1] > teamSize) {
       return res.status(404).json({
-        message:"Too few members to get out"
-      })
+        message: "Too few members to get out",
+      });
     }
-  await User.updateMany({Team_Id:teamid},{timesarray:[...timesarray,new Date()],current_absent:[...current_absent,current_absent[current_absent.length-1]+1]});
-  res.send("ok");
-  }catch(err){
+    await User.updateMany(
+      { Team_Id: teamid },
+      {
+        timesarray: [...timesarray, new Date()],
+        current_absent: [
+          ...current_absent,
+          current_absent[current_absent.length - 1] + 1,
+        ],
+      }
+    );
+    res.send("ok");
+  } catch (err) {
     console.log(err);
   }
 });
-app.get('/in/:teamid',async(req,res)=>{
-  try{const teamid = req.params.teamid;
-    let {timesarray,current_absent} = await User.findOne({Team_Id:teamid});
-    if(current_absent[current_absent.length-1]<=0){
+app.get("/in/:teamid", async (req, res) => {
+  try {
+    const teamid = req.params.teamid;
+    let { timesarray, current_absent } = await User.findOne({
+      Team_Id: teamid,
+    });
+    if (current_absent[current_absent.length - 1] <= 0) {
       return res.status(404).json({
-        message:"Too many members to get in"
-      })
+        message: "Too many members to get in",
+      });
     }
-  await User.updateMany({Team_Id:teamid},{timesarray:[...timesarray,new Date()],current_absent:[...current_absent,current_absent[current_absent.length-1]-1]});
-  res.send("ok");
-  }catch(err){
+    await User.updateMany(
+      { Team_Id: teamid },
+      {
+        timesarray: [...timesarray, new Date()],
+        current_absent: [
+          ...current_absent,
+          current_absent[current_absent.length - 1] - 1,
+        ],
+      }
+    );
+    res.send("ok");
+  } catch (err) {
     console.log(err);
   }
   // const teams = await User.find({Team_id:teamid});
@@ -160,18 +182,34 @@ app.get('/in/:teamid',async(req,res)=>{
   // res.send({date:d});
 });
 
-app.get('/teams', async(req,res)=>{
-  const teams = (await User.find()).filter((item,i)=>{return (item.Player_Type === "team leader")});
-  const teamNames = teams.map(({Team_Name},i)=>(
-    Team_Name
-  ))
-  console.log(teamNames);
+app.get("/teams", async (req, res) => {
+  const teams = (await User.find()).filter((item, i) => {
+    return item.Player_Type === "team leader";
+  });
+  const teamNames = teams.map(({ Team_Name, Team_Id }, i) => ({
+    Team_Name,
+    Team_Id,
+  }));
+  // console.log(teamNames);
   res.json(teamNames);
-})
-app.get("/:teamid",async (req,res)=>{
+});
+app.get("/:teamid", async (req, res) => {
   const id = req.params.teamid;
-  const resp =((await User.find({Team_Id:id})).filter((item,i)=>{return (item.Player_Type==="team leader")}))[0];
+  const resp = (await User.find({ Team_Id: id })).filter((item, i) => {
+    return item.Player_Type === "team leader";
+  })[0];
   console.log(resp);
   res.json(resp);
 });
-// app.post('/splannouncements')
+app.post("/splannouncements", async (req, res) => {
+  try {
+    const { title, description, team_selected } = req.body;
+    let teamann = (await User.findOne({ Team_Id: team_selected })).announcement;
+    let id = (await User.findOne({ Team_Id: team_selected }))._id;
+    teamann = [...teamann, { title, description }];
+    await User.findByIdAndUpdate(id, { announcement: teamann });
+    res.status(200).json({ message: "ok" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
