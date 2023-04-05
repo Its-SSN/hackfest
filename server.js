@@ -169,7 +169,7 @@ app.get("/out/:teamid", async (req, res) => {
         ],
       }
     );
-    res.send("ok");
+    res.status(200).json({ message: "out" });
   } catch (err) {
     console.log(err);
   }
@@ -195,7 +195,7 @@ app.get("/in/:teamid", async (req, res) => {
         ],
       }
     );
-    res.send("ok");
+    res.status(200).json({ message: "in" });
   } catch (err) {
     console.log(err);
   }
