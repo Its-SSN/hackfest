@@ -98,10 +98,32 @@ app.get("/refreshment_counter/:teamid", async (req, res) => {
     const teamsize = teams.length;
     // console.log(teamsize);
     if (teamsize < counter) {
-      return res.status(400).json({ message: "Too many team members" });
+      return res.status(400).json({ message: "Too many refreshments" });
     }
     await User.updateMany({ Team_Id: id }, { refreshment_counter: counter });
     return res.status(200).json({ message: id });
+  } catch (error) {
+    return res.status(500).json({ message: error.mesaage });
+  }
+});
+app.get("/refreshment_counter_two/:teamid", async (req, res) => {
+  try {
+    const id = req.params.teamid;
+    const foundUser = await User.findOne({ Team_Id: id });
+    let counter = foundUser.refreshment_counter_two;
+    // res.json({ user: foundUser.refreshment_counter_two });
+    counter = counter + 1;
+    const teams = await User.find({ Team_Id: id });
+    const teamsize = teams.length;
+    if (teamsize < counter) {
+      return res.status(400).json({ message: "Too many refreshments" });
+    }
+    const resp = await User.updateMany(
+      { Team_Id: id },
+      { refreshment_counter_two: counter }
+    );
+    // console.log(resp);
+    return res.status(200).json({ message: `${id}` });
   } catch (error) {
     return res.status(500).json({ message: error.mesaage });
   }

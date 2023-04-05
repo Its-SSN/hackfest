@@ -34,6 +34,10 @@ const teamSchema = mongoose.Schema({
     type: Number,
     default: 0,
   },
+  refreshment_counter_two: {
+    type: Number,
+    default: 0,
+  },
   current_absent: {
     type: [Number],
     default: [0],
