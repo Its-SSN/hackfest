@@ -196,8 +196,9 @@ app.get("/in/:teamid", async (req, res) => {
       }
     );
     res.status(200).json({ message: "in" });
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
+    return res.send(error.mesaage);
   }
   // const teams = await User.find({Team_id:teamid});
   // const d = new Date();
@@ -227,9 +228,9 @@ app.post("/splannouncements", async (req, res) => {
   try {
     const { title, description, team_selected } = req.body;
     let teamann = (await User.findOne({ Team_Id: team_selected })).announcement;
-    let id = (await User.findOne({ Team_Id: team_selected }))._id;
+    // let id = (await User.findOne({ Team_Id: team_selected })).Team_Id;
     teamann = [...teamann, { title, description }];
-    await User.findByIdAndUpdate(id, { announcement: teamann });
+    await User.updateMany({Team_Id:team_selected}, { announcement: teamann });
     res.status(200).json({ message: "ok" });
   } catch (err) {
     res.status(500).json({ error: err.message });
