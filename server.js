@@ -5,6 +5,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const User = require("./schemas/teams");
+const Test = require('./schemas/testteam')
 // const User = require('./schemas/testteam')
 const Organizers = require("./schemas/organizing");
 const Announcements = require("./schemas/announcement");
@@ -205,6 +206,33 @@ app.get("/in/:teamid", async (req, res) => {
   // res.send({date:d});
 });
 
+app.post("/manHours", async(req, res) => {
+  // const user = await User.findOne({Team_Name: "Cryptic Shadows"})
+  const users = await User.find();
+
+  // console.log(user.timesarray.length);
+  users.map((user,i)=>{
+    let time = user.timesarray ;
+  let absent = user.current_absent;
+  let timeDiff = [];
+  for(let i = 1; i<time.length; i++){
+    timeDiff.push(Math.abs(time[i] - time[i-1]))
+  }
+  let manHours = 0;
+  for(let i = 0; i<timeDiff.length; i++){
+    manHours+= (timeDiff[i]*absent[i+1]);
+  }
+  let totalHours = (manHours/3600000);
+  let hours = Math.floor(totalHours);
+let fraction = totalHours - hours;
+
+let minutes = Math.round(fraction * 60);
+console.log("Team:"+user.Team_Name+" Time:"+hours + " hours and " + minutes + " minutes");
+  })
+// res.send("Time:"+hours + " hours and " + minutes + " minutes");
+
+})
+
 app.get("/teams", async (req, res) => {
   const teams = (await User.find()).filter((item, i) => {
     return item.Player_Type === "team leader";
@@ -235,4 +263,11 @@ app.post("/splannouncements", async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+});
+
+
+app.post('/updating', async(req,res)=>{
+  const hi = await User.updateMany({}, {attendance_counter:0});
+  // console.log("hi");
+  res.send("hi");
 });
